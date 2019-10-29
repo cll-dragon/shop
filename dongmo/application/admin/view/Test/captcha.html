@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>获取验证码</title>
+</head>
+<body>
+    <form action="" method="post">
+        <!-- captcha_src()调用助手函数使用验证码 -->
+        验证码：<img src="{:captcha_src()}" alt="captcha"/><br/>
+        <input type="text" name="captcha">
+        <input type="submit" name="" value="submit">
+    </form>
+</body>
+</html>

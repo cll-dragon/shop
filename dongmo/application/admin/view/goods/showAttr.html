@@ -1,0 +1,25 @@
+<!-- 每选择一个类型，属性就会改变，从数据库获取的值不同，模板渲染也会不同 -->
+<table width="100%" align="center">
+    <!-- 每一个tr标签代表一个属性信息,根据每个id找对应的数据 -->
+    {volist name="data" id="vo"}
+    <tr>
+        <!-- $vo.attr_type 为1表示是唯一值，为2表示单选属性，要设置多个值,后面可以复制几个出来 -->
+        <td class="label">{eq name='$vo.attr_type' value='2'}
+            <a href="javascript:;" onclick="cloneThis(this)">[+]</a>{/eq}{$vo.attr_name}：</td>
+        <td>
+            <!-- 通过隐藏域传递属性id,attr_id $vo.id为属性表中的id字段-->
+            <input type="hidden" name="attr_ids[]" value="{$vo.id}">
+            {eq name="$vo.attr_input_type" value="1"}
+                <input type="text" name="attr_values[]">
+            {else /}
+            <!-- 一个id对应多个属性，一个属性的属性值有多个，也要使用数组格式提交 -->
+                <select name="attr_values[]">
+                    {volist name="$vo.attr_values" id="v"}
+                    <option>{$v}</option>
+                    {/volist}
+                </select>
+            {/eq}
+        </td>
+    </tr>
+    {/volist}
+</table>

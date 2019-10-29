@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>ECSHOP 管理中心 - 商品列表 </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="__ADMIN__Styles/general.css" rel="stylesheet" type="text/css" />
+<link href="__ADMIN__Styles/main.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h1>
+    <span class="action-span"><a href="">添加新商品</a></span>
+    <span class="action-span1"><a href="">ECSHOP 管理中心</a></span>
+    <span id="search_id" class="action-span1"> - 商品列表 </span>
+    <div style="clear:both"></div>
+</h1>
+<div class="form-div">
+    <form action="" name="searchForm">
+        <img src="__ADMIN__Images/icon_search.gif" width="26" height="22" border="0" alt="search" />
+        <!-- 分类 -->
+        <select name="cate_id">
+            <option value="0">所有分类</option>
+            {volist name="tree" id="vo"}
+            <option value="{$vo.id}" {eq name="$Think.get.cate_id" value="$vo.id" }selected="selected"{/eq}>{$vo.lev|str_repeat='&nbsp;',###}{$vo.cate_name}</option>
+            {/volist}
+        </select>
+
+        <!-- 推荐 -->
+        <select name="intro_type">
+            <option value="0">全部</option>
+            <option value="is_rec">推荐</option>
+            <option value="is_new">新品</option>
+            <option value="is_hot">热销</option>
+        </select>
+        <!-- 关键字 -->
+        关键字 <input type="text" name="keyword" size="15" />
+        <input type="submit" value=" 搜索 " class="button" />
+    </form>
+</div>
+<!-- 商品列表 -->
+<div class="list-div" id="listDiv">
+    <table cellpadding="3" cellspacing="1">
+        <tr>
+            <th>编号</th>
+            <th>商品名称</th>
+            <th>货号</th>
+            <th>价格</th>
+            <th>推荐</th>
+            <th>新品</th>
+            <th>热销</th>
+            <th>操作</th>
+        </tr>
+        {volist name="data" id="vo"}
+        <tr>
+            <td align="center">{$vo.id}</td>
+            <td align="center">{$vo.goods_name}</td>
+            <td align="center">{$vo.goods_sn}</td>
+            <td align="center">{$vo.shop_price}</td>
+            <td align="center"><img onclick="changeStatus({$vo.id},'is_rec',this)" src="__ADMIN__Images/{eq name="$vo.is_rec" value="1"}yes{else/}no{/eq}.gif "/></td>
+            <td align="center"><img onclick="changeStatus({$vo.id},'is_new',this)" src="__ADMIN__Images/{eq name="$vo.is_new" value="1"}yes{else/}no{/eq}.gif "/></td>
+            <td align="center"><img onclick="changeStatus({$vo.id},'is_hot',this)" src="__ADMIN__Images/{eq name="$vo.is_hot" value="1"}yes{else/}no{/eq}.gif "/></td>
+            <td align="center">
+            <a href="{:url('rollback','id='.$vo['id'])}" >还原</a>
+            <a href="{:url('delete','id='.$vo['id'])}">彻底删除</a></td>
+        </tr>
+        {/volist}
+
+    </table>
+    <style type="text/css">
+        .pagination{ width: 500px; }
+        .pagination li{ float: left; width: 50px; list-style: none }
+    </style>
+    <!-- 分页开始 -->
+    <table id="page-table" cellspacing="0">
+        <tr>
+            <td width="80%">&nbsp;</td>
+            <td align="center" nowrap="true">
+                {$data->render()}
+            </td>
+        </tr>
+    </table>
+<!-- 分页结束 -->
+</div>
+<script type="text/javascript" src="__ADMIN__Js\jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+    // 商品状态切换
+    function changeStatus(goods_id,field,obj){
+        $.ajax({
+            type:'post',
+            dataType:'json',
+            data:{goods_id:goods_id,field:field},
+            url:'{:url("changeStatus")}',
+            success:function(response){
+                if(response.status == 0){
+                    $(obj).attr('src','__ADMIN__Images/no.gif');
+                }else{
+                    $(obj).attr('src','__ADMIN__Images/yes.gif');
+                }
+           } 
+        })
+    }
+
+</script>
